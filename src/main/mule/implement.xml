@@ -35,4 +35,35 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="GetFlightByIds" doc:id="9024af05-8428-4cda-a462-1e75c57bbc9e" >
+		<set-variable value="0" doc:name="Set Variable" doc:id="c4ffaf5c-ab68-41bc-aa98-ef5963fffa65" variableName="count"/>
+		<ee:transform doc:name="init flights" doc:id="9ab0447a-7611-4f16-a7ba-e06566a25d3c">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="flights" ><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="070f0d46-f8aa-42e0-9082-4a34ea39537d" collection="#[payload.planeNumbers]">
+			<db:select doc:name="Select" doc:id="f14cccd1-4fba-43e7-b9d5-bdc0f1c08a9a" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from american where id = :ID]]></db:sql>
+				<db:input-parameters ><![CDATA[#[{'ID':payload}]]]></db:input-parameters>
+		</db:select>
+			<logger level="INFO" doc:name="Logger" doc:id="69de7458-c9b0-4a41-a683-b5aea9fd9d80" message="#[payload]"/>
+			<set-variable value="#[vars.counter]" doc:name="Set Variable" doc:id="72b1a5f5-69b1-491e-b36d-83ecd756d177" variableName="counter"/>
+			<ee:transform doc:name="add flights" doc:id="fc87522b-c9d8-4019-bc66-113eaa43557f">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="flights"><![CDATA[%dw 2.0
+output application/java
+---
+vars.flights + payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		</foreach>
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.flights]" doc:name="Set Payload" doc:id="41538a57-e04f-4cf8-b246-686780e466c3" />
+	</flow>
 </mule>
