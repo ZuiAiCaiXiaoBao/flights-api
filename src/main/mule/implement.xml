@@ -64,6 +64,6 @@ vars.flights + payload]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		</foreach>
-		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.flights]" doc:name="Set Payload" doc:id="41538a57-e04f-4cf8-b246-686780e466c3" />
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.flights]" doc:name="Result Output" doc:id="41538a57-e04f-4cf8-b246-686780e466c3" />
 	</flow>
 </mule>
