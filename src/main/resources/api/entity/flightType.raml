@@ -1,0 +1,48 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  planeType:
+    type: string
+    displayName: "type of plane"
+    example: "Boeing 737"
+  code2:
+    type: string
+    displayName: "code2"
+    example: "4567"
+  takeOffDate:
+    type: datetime-only
+    displayName: "leave date"
+    example: 2016-01-20T08:00:00
+  code1:
+    type: string
+    displayName: "code1"
+    example: "rree"
+  fromAirport:
+    type: string
+    displayName: "Airport to leave"
+    example: "MUA"
+  price:
+    type: number
+    displayName: "price"
+    example: 456
+  seatsAvailable:
+    type: number
+    displayName: "have how many seats"
+    example: 100
+  toAirport:
+    type: string
+    displayName: "Airport to arrive"
+    example: "MUA"
+  ID:
+    type: number
+    displayName: "number of plane"
+    example: 11
+  airlineName:
+    type: string
+    displayName: "name of airLine"
+    example: "American Airlines"   
+  totalSeats:
+    type: number
+    displayName: "number of seats"
+    example: 150   
