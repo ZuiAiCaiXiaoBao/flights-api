@@ -140,6 +140,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\flights\partFlights:application\json:flightsapi-config">
-        <logger level="INFO" message="post:\flights\partFlights:application\json:flightsapi-config" />
+		<flow-ref doc:name="Flow Reference" doc:id="1df6cf5d-d464-4f9f-b48f-182d6fa7261a" name="GetFlightByIds"/>
     </flow>
 </mule>

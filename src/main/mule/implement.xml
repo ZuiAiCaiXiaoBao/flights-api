@@ -22,9 +22,9 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="GetFlightById" doc:id="8a6849f8-f6ce-4be3-b7b4-91335bd11069" >
-		<db:select doc:name="Select" doc:id="b3019028-8b17-430e-83cf-91dae976797e" config-ref="Database_Config" >
-			<db:sql ><![CDATA[select * from american where id = :ID]]></db:sql>
-			<db:input-parameters ><![CDATA[#[{'ID':attributes.uriParams.ID}]]]></db:input-parameters>
+		<db:select doc:name="Select" doc:id="b3019028-8b17-430e-83cf-91dae976797e" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from american where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID':attributes.uriParams.ID}]]]></db:input-parameters>
 		</db:select>
 		<ee:transform doc:name="Transform Message" doc:id="509c27c0-4601-4025-bd76-4c3011c9e945" >
 			<ee:message >
@@ -35,4 +35,40 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="GetFlightByIds" doc:id="903b7898-6c81-4010-805d-13679eafc21e" >
+		<ee:transform doc:name="Transform Message" doc:id="a27d5c8d-19db-4ffb-ba61-f9ef98c4a810" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="flights" ><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="3df4c4fc-6ea6-4a62-9060-789374287017" collection="#[%dw 2.0&#10;output application/json&#10;---&#10;payload.planeNumbers]">
+			<db:select doc:name="Select" doc:id="7911d60b-093a-4bbe-a727-c4dcbca9e7c7" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from american where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID':payload}]]]></db:input-parameters>
+		</db:select>
+			<ee:transform doc:name="Transform Message" doc:id="5065ed1c-2bfb-4f49-a6b2-4636e7d5de9f" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="flights" ><![CDATA[%dw 2.0
+output application/java
+---
+vars.flights + payload]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="a786609c-d039-4d4b-91cd-18cbaf9854e1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.flights]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+
 </mule>
