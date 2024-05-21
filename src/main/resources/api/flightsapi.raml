@@ -1,0 +1,28 @@
+#%RAML 1.0
+title: flightType
+types:
+  flight: !include entity/flightType.raml
+  
+
+/flights:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: flight[]
+  /{ID}:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                type: flight
+      delete:
+        responses:
+          200:
+            body:
+              application/json:
+                type: string
+                displayName: "result"
+                example: "not true delete"          
