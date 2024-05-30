@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="paralle_reuslt" format="json">
+      <types:shape format="weave" example="examples/paralleJson.json"><![CDATA[%dw 2.0
+
+type paralle_reuslt = Array<Array<{|  planeType: String,   code2: String,   takeOffDate: String,   code1: String,   fromAirport: String,   price: Number {"typeId": "int"},   seatsAvailable: Number {"typeId": "int"},   toAirport: String,   ID: Number {"typeId": "int"},   airlineName: String,   totalSeats: Number {"typeId": "int"}|}>> {"example": "[[{\\\"planeType\\\":\\\"Boeing 787\\\",\\\"code2\\\":\\\"0001\\\",\\\"takeOffDate\\\":\\\"2016-01-20T08:00:00\\\",\\\"code1\\\":\\\"rree\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":541,\\\"seatsAvailable\\\":0,\\\"toAirport\\\":\\\"LAX\\\",\\\"ID\\\":1,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":200}],[{\\\"planeType\\\":\\\"Boeing 747\\\",\\\"code2\\\":\\\"0123\\\",\\\"takeOffDate\\\":\\\"2016-01-25T08:00:00\\\",\\\"code1\\\":\\\"eefd\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":300,\\\"seatsAvailable\\\":7,\\\"toAirport\\\":\\\"CLE\\\",\\\"ID\\\":2,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":345}],[{\\\"planeType\\\":\\\"Boeing 737\\\",\\\"code2\\\":\\\"1000\\\",\\\"takeOffDate\\\":\\\"2016-01-20T08:00:00\\\",\\\"code1\\\":\\\"rree\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":200,\\\"seatsAvailable\\\":5,\\\"toAirport\\\":\\\"CLE\\\",\\\"ID\\\":4,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":150}],[{\\\"planeType\\\":\\\"Boeing 737\\\",\\\"code2\\\":\\\"1093\\\",\\\"takeOffDate\\\":\\\"2016-02-11T08:00:00\\\",\\\"code1\\\":\\\"rree\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":142,\\\"seatsAvailable\\\":1,\\\"toAirport\\\":\\\"SFO\\\",\\\"ID\\\":5,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":150}],[{\\\"planeType\\\":\\\"Boeing 787\\\",\\\"code2\\\":\\\"1112\\\",\\\"takeOffDate\\\":\\\"2016-01-20T08:00:00\\\",\\\"code1\\\":\\\"ffee\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":954,\\\"seatsAvailable\\\":100,\\\"toAirport\\\":\\\"CLE\\\",\\\"ID\\\":6,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":200}],[{\\\"planeType\\\":\\\"Boeing 777\\\",\\\"code2\\\":\\\"4511\\\",\\\"takeOffDate\\\":\\\"2016-01-15T08:00:00\\\",\\\"code1\\\":\\\"eefd\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":900,\\\"seatsAvailable\\\":100,\\\"toAirport\\\":\\\"LAX\\\",\\\"ID\\\":10,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":300}]]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="paralle_result" format="json">
+      <types:shape format="weave" example="examples/paralleJsonResult.json"><![CDATA[%dw 2.0
+
+type paralle_result = Array<{|  planeType: String,   code2: String,   takeOffDate: String,   code1: String,   fromAirport: String,   price: Number {"typeId": "int"},   seatsAvailable: Number {"typeId": "int"},   toAirport: String,   ID: Number {"typeId": "int"},   airlineName: String,   totalSeats: Number {"typeId": "int"}|}> {"example": "[{\\\"planeType\\\":\\\"Boeing 787\\\",\\\"code2\\\":\\\"0001\\\",\\\"takeOffDate\\\":\\\"2016-01-20T08:00:00\\\",\\\"code1\\\":\\\"rree\\\",\\\"fromAirport\\\":\\\"MUA\\\",\\\"price\\\":541,\\\"seatsAvailable\\\":0,\\\"toAirport\\\":\\\"LAX\\\",\\\"ID\\\":1,\\\"airlineName\\\":\\\"American Airlines\\\",\\\"totalSeats\\\":200}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#837994bb-3c98-4bd6-a3cf-202f86fa60bb">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="paralle_reuslt[]"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="paralle_result"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#5065ed1c-2bfb-4f49-a6b2-4636e7d5de9f">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="flights" type="paralle_result"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

@@ -5,9 +5,6 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="92be09fd-0caa-49a0-a32a-ef2f56e77522" >
-		<db:my-sql-connection host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.database}" />
-	</db:config>
 	<flow name="GetAllFlights" doc:id="c6393c00-ae9e-4d15-b7e5-9807a6f94491" >
 		<db:select doc:name="Select" doc:id="d16facc7-31b9-44f4-9fd6-77b0f3c94db3" config-ref="Database_Config">
 			<db:sql ><![CDATA[select * from american;]]></db:sql>
@@ -36,28 +33,20 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="GetFlightByIds" doc:id="903b7898-6c81-4010-805d-13679eafc21e" >
-		<ee:transform doc:name="Transform Message" doc:id="a27d5c8d-19db-4ffb-ba61-f9ef98c4a810" >
-			<ee:message >
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="flights" ><![CDATA[%dw 2.0
-output application/java
----
-[]]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
+		<set-variable value="#[[]]" doc:name="Set Variable" doc:id="347343d0-646d-4930-9d7b-f6b05b45f636" variableName="flights"/>
 		<foreach doc:name="For Each" doc:id="3df4c4fc-6ea6-4a62-9060-789374287017" collection="#[%dw 2.0&#10;output application/json&#10;---&#10;payload.planeNumbers]">
 			<db:select doc:name="Select" doc:id="7911d60b-093a-4bbe-a727-c4dcbca9e7c7" config-ref="Database_Config">
 			<db:sql><![CDATA[select * from american where id = :ID]]></db:sql>
 			<db:input-parameters><![CDATA[#[{'ID':payload}]]]></db:input-parameters>
 		</db:select>
-			<ee:transform doc:name="Transform Message" doc:id="5065ed1c-2bfb-4f49-a6b2-4636e7d5de9f" >
+			<logger level="INFO" doc:name="Log result from DB" doc:id="375c2b97-9b2e-4da8-9022-35ea3f1fc319" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]"/>
+			<ee:transform doc:name="Transform Message" doc:id="5065ed1c-2bfb-4f49-a6b2-4636e7d5de9f">
 				<ee:message />
-				<ee:variables >
-					<ee:set-variable variableName="flights" ><![CDATA[%dw 2.0
-output application/java
+				<ee:variables>
+					<ee:set-variable variableName="flights"><![CDATA[%dw 2.0
+output application/json
 ---
-vars.flights + payload]]></ee:set-variable>
+vars.flights + payload[0]]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
 		</foreach>
@@ -67,6 +56,22 @@ vars.flights + payload]]></ee:set-variable>
 output application/json
 ---
 vars.flights]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="GetFlightParallel" doc:id="769a206f-661c-4b1e-a117-319a497006ef" >
+		<parallel-foreach doc:name="Parallel For Each" doc:id="b1bac24f-24a0-4289-aff3-ce023437ec70" collection="#[%dw 2.0&#10;output application/json&#10;---&#10;payload.planeNumbers]" target="results">
+			<db:select doc:name="Select" doc:id="523d77a9-e1d3-4468-a902-33cd1aa6a18a" config-ref="Database_Config">
+				<db:sql><![CDATA[select * from american where id = :ID]]></db:sql>
+				<db:input-parameters><![CDATA[#[{'ID':payload}]]]></db:input-parameters>
+			</db:select>
+		</parallel-foreach>
+		<ee:transform doc:name="Transform Message" doc:id="837994bb-3c98-4bd6-a3cf-202f86fa60bb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.result]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>

@@ -41,7 +41,23 @@ types:
           200:
             body:
               application/json:
-                type: flight[]        
+                type: flight[]
+  /parallelFlights:
+    post:
+      body:
+        application/json:
+          type: object
+          properties:
+            planeNumbers:
+              type: array
+              items: string
+              displayName: "number of plane"
+              example: ["string1", "string2", "string3"]
+      responses:
+          200:
+            body:
+              application/json:
+                type: flight[]                  
                           
 
                              

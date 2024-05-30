@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
-    <http:listener-config name="flightsapi-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8081" />
-    </http:listener-config>
-    <apikit:config name="flightsapi-config" api="flightsapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="flightsapi-main">
         <http:listener config-ref="flightsapi-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -142,4 +138,7 @@ output application/json
     <flow name="post:\flights\partFlights:application\json:flightsapi-config">
 		<flow-ref doc:name="Flow Reference" doc:id="1df6cf5d-d464-4f9f-b48f-182d6fa7261a" name="GetFlightByIds"/>
     </flow>
+	<flow name="post:\flights\parallelFlights:application\json:flightsapi-config" doc:id="83a001bd-223e-4954-9299-e06bc375a8bf" >
+		<flow-ref doc:name="Flow Reference" doc:id="d67f4fe8-b70f-407a-a93c-8c3d101dc4f0" name="GetFlightParallel" />
+	</flow>
 </mule>
